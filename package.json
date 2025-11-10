@@ -3,11 +3,9 @@
   "version": "1.0.0",
   "description": "Supabase + Vercel proximity coordination backend",
   "type": "module",
-  "scripts": {
-    "dev": "vercel dev"
-  },
   "dependencies": {
-    "@supabase/supabase-js": "^2.81.0"
+    "@supabase/supabase-js": "^2.81.0",
+    "hono": "^4.10.4"
   },
   "engines": {
     "node": ">=18.x"
