@@ -1,6 +1,6 @@
 # Supabase Proximity GPS App
 
-This repository contains a sample proximity coordination stack built with Supabase, Vercel serverless functions, and a React Native mobile client. The backend polls user locations, runs Haversine-based geo queries, and delivers Firebase Cloud Messaging (FCM) alerts when users enter a 100 meter radius for two consecutive updates.
+This repository contains a sample proximity coordination stack built with Supabase, Vercel serverless functions, and a React Native mobile client. The backend polls user locations, runs Haversine-based geo queries, and tracks when users enter a 100 meter radius for two consecutive updates. Clients can use Supabase Realtime subscriptions to get notified of proximity changes.
 
 ## Project Structure
 
@@ -12,13 +12,11 @@ This repository contains a sample proximity coordination stack built with Supaba
 │       ├── nearby.js              # Returns users within 100 meters
 │       └── update.js              # Accepts location updates & emits proximity alerts
 ├── lib/
-│   ├── notifications.js           # Firebase Admin FCM client
 │   └── supabase.js                # Supabase service-role client
 ├── mobile/
 │   ├── App.js                     # React Native entry point
 │   └── services/
-│       ├── location.js            # Expo location helpers
-│       └── notifications.js       # FCM topic subscription helpers
+│       └── location.js            # Expo location helpers
 ├── sql/
 │   └── schema.sql                 # Database schema & stored procedures
 ├── package.json                   # Serverless function dependencies
@@ -29,8 +27,7 @@ This repository contains a sample proximity coordination stack built with Supaba
 
 - Supabase project with the [PostGIS extension](https://supabase.com/docs/guides/database/extensions/postgis) enabled
 - Vercel account for deploying the serverless functions
-- Firebase project with a service account JSON file for FCM
-- React Native toolchain (Expo recommended) with `@react-native-firebase/messaging` installed
+- React Native toolchain (Expo recommended)
 
 ## Environment Variables
 
@@ -39,7 +36,6 @@ Create the following environment variables in Vercel:
 ```
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-FCM_SERVICE_ACCOUNT={"type":"service_account", ...}
 ```
 
 ## Database Setup
@@ -66,19 +62,20 @@ FCM_SERVICE_ACCOUNT={"type":"service_account", ...}
 2. Install mobile dependencies:
    ```bash
    expo install expo-location @react-native-async-storage/async-storage
-   npm install @react-native-firebase/app @react-native-firebase/messaging
+   npm install @supabase/supabase-js
    ```
 3. Update `API_BASE_URL` in [`mobile/App.js`](mobile/App.js) to point to your deployed Vercel domain.
-4. Configure FCM for your platform following the [React Native Firebase setup guide](https://rnfirebase.io/messaging/usage).
+4. (Optional) Set up Supabase Realtime subscriptions to listen for proximity updates on the `locations` table.
 5. Run the mobile project via `expo start` or your preferred bundler.
 
 ## Usage Notes
 
 - The client polls `/api/location/update` every 30 seconds while the app is foregrounded and sharing is enabled.
 - Location updates with accuracy worse than 50 meters are ignored to reduce noisy data.
-- Proximity notifications require two consecutive updates within 100 meters before FCM alerts fire.
+- Proximity detection requires two consecutive updates within 100 meters before the system tracks it.
 - Background polling stops automatically when the app transitions to the background to preserve battery.
 - The cleanup cron removes locations not updated in the last 10 minutes.
+- For real-time notifications, use Supabase Realtime to subscribe to changes in the `locations` table.
 
 ## Security Considerations
 

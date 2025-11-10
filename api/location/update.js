@@ -1,5 +1,4 @@
 import supabase from '../../lib/supabase.js'
-import { sendProximityAlert } from '../../lib/notifications.js'
 
 // Maximum allowed distance in meters before triggering alerts
 const MAX_DISTANCE_METERS = 100
@@ -113,13 +112,8 @@ export default async function handler(req, res) {
       throw updateCountersError
     }
 
-    if (shouldNotify) {
-      try {
-        await sendProximityAlert(userId, nearbyUsers)
-      } catch (notificationError) {
-        console.error('Failed to send proximity alert', notificationError)
-      }
-    }
+    // Note: Push notifications removed - use Supabase Realtime subscriptions instead
+    // Clients can subscribe to the 'locations' table to get real-time proximity updates
 
     return res.status(200).json({
       success: true,

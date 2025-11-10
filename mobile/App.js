@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { AppState, Button, FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { requestLocationPermissions, getCurrentLocation } from './services/location'
-import { initializeNotifications, subscribeToUserTopic } from './services/notifications'
 
 const API_BASE_URL = 'https://your-vercel-project.vercel.app'
 const POLL_INTERVAL_MS = 30_000
@@ -103,10 +102,7 @@ export default function App() {
     async function bootstrap() {
       const id = await ensureUserId()
       await requestLocationPermissions()
-      const token = await initializeNotifications()
-      if (token) {
-        await subscribeToUserTopic(id)
-      }
+      // Note: For real-time updates, integrate Supabase Realtime subscriptions here
       setStatusMessage('Ready to share location')
       startPolling()
     }

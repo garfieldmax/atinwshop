@@ -5,7 +5,6 @@
   "main": "api/location/update.js",
   "type": "module",
   "dependencies": {
-    "@supabase/supabase-js": "^2.38.0",
-    "firebase-admin": "^11.11.0"
+    "@supabase/supabase-js": "^2.81.0"
   }
 }
