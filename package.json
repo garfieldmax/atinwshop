@@ -2,9 +2,11 @@
   "name": "supabase-proximity-gps",
   "version": "1.0.0",
   "description": "Supabase + Vercel proximity coordination backend",
-  "main": "api/location/update.js",
   "type": "module",
   "dependencies": {
     "@supabase/supabase-js": "^2.81.0"
+  },
+  "scripts": {
+    "dev": "vercel dev"
   }
 }
